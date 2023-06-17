@@ -7,31 +7,54 @@ import {
   Dimensions
 } from 'react-native';
 import { Feather } from '@expo/vector-icons';
+import { weatherType } from '../utils/weatherType';
 import RowText from '../components/RowText';
 
-const CurrentWeather = () => {
-  const { wrapper, container, temp, feels, highLowWrapper, highLow, bodyWrapper, description, message } = styles;
+const CurrentWeather = ({ weatherData }) => {
+  const { 
+    wrapper, 
+    container, 
+    tempStyle, 
+    feels, 
+    highLowWrapper, 
+    highLow, 
+    bodyWrapper, 
+    description, 
+    message 
+  } = styles;
+
+  const { main: { temp, feels_like, temp_max, temp_min }, weather } = weatherData;
+  const weatherCond = weather[0]?.main;
 
   return (
-    <SafeAreaView style={wrapper}>
+    <SafeAreaView 
+      style={
+        [
+          wrapper, 
+          {
+            backgroundColor: weatherType[weatherCond]?.backgroundColor
+          }
+        ]
+      }
+    >
       <View style={container}>
-        <Feather name="sun" size={100} color="black" />
-        <Text style={temp}>6</Text>
-        <Text style={feels}>Feels like 5</Text>
+        <Feather name={weatherType[weatherCond]?.icon} size={100} color="white" />
+        <Text style={tempStyle}>{Math.round(temp)}°</Text>
+        <Text style={feels}>{`Feels like ${Math.round(feels_like)}°`}</Text>
         <RowText
           viewStyle={highLowWrapper}
           upperTextStyle={highLow}
           lowerTextStyle={highLow}
-          upperText={'High: 8 '}
-          lowerText={'Low: 6'}
+          upperText={`Low: ${Math.round(temp_min)}° `}
+          lowerText={`High: ${Math.round(temp_max)}°`}
         />
       </View>
       <RowText
         viewStyle={bodyWrapper}
         upperTextStyle={description}
         lowerTextStyle={message}
-        upperText={'It\'s sunny'}
-        lowerText={'It\'s perfect t-shirt weather'}
+        upperText={weather[0]?.description.charAt(0).toUpperCase() + weather[0]?.description.slice(1)}
+        lowerText={weatherType[weatherCond]?.message}
       />
     </SafeAreaView>
   );
@@ -39,7 +62,6 @@ const CurrentWeather = () => {
 
 const styles = StyleSheet.create({
   wrapper: {
-    backgroundColor: 'pink',
     flex: 1,
     width: Dimensions.get('window').width,
     height: Dimensions.get('window').height
@@ -49,32 +71,34 @@ const styles = StyleSheet.create({
     alignItems: 'center', // Horizontally.
     justifyContent: 'center' // Vertically.
   },
-  temp: {
-    color: 'black',
+  tempStyle: {
+    color: 'white',
     fontSize: 48
   },
   feels: {
     fontSize: 30,
-    color: 'black'
+    color: 'white'
   },
   highLow: {
     fontSize: 20,
-    color: 'black'
+    color: 'white'
   },
   highLowWrapper: {
     flexDirection: 'row'
   },
   bodyWrapper: {
-    justifyContent: 'flex-end',
-    alignItems: 'flex-start',
+    justifyContent: 'center',
+    alignItems: 'center',
     paddingLeft: 25,
     marginBottom: 40
   },
   description: {
-    fontSize: 48
+    fontSize: 40,
+    color: 'white'
   },
   message: {
-    fontSize: 30
+    fontSize: 25,
+    color: 'white'
   }
 });
 

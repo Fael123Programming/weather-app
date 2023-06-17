@@ -1,10 +1,8 @@
 import React from 'react';
 import {
     SafeAreaView,
-    Text,
     StyleSheet,
     FlatList,
-    StatusBar,
     Dimensions,
     ImageBackground
 } from 'react-native';
@@ -51,16 +49,15 @@ const weatherData = [
 
 const renderItem = ({item}) => (
     <WeatherItem 
-        dt_txt={item.dt_txt} 
-        min={item.main.temp_min} 
-        max={item.main.temp_max}
-        condition={item.weather[0].main}
+        dt_txt={item?.dt_txt} 
+        min={item?.main.temp_min} 
+        max={item?.main.temp_max}
+        condition={item?.weather[0].main}
     />
 );
 
-const UpcomingWeather = () => {
-
-    const { container, image} = styles;
+const UpcomingWeather = ({ weatherData }) => {
+    const { container, image } = styles;
 
     return (
         <SafeAreaView style={container}>
@@ -68,7 +65,6 @@ const UpcomingWeather = () => {
                 source={require('../../assets/upcoming-weather.jpg')}
                 style={image}
             >
-                <Text style={{textAlign: 'center'}}>Upcoming Weather</Text>
                 <FlatList
                     data={weatherData}
                     renderItem={renderItem}
@@ -82,9 +78,11 @@ const UpcomingWeather = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        height: Dimensions.get('window').height,
+        width: Dimensions.get('window').width,
         alignItems: 'center',
         justifyContent: 'center',
-        marginTop: StatusBar.currentHeight || 0,
+        // marginTop: StatusBar.currentHeight || 0,
     },
     image: {
         flex: 1,

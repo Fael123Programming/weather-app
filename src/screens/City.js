@@ -6,13 +6,23 @@ import {
     StyleSheet,
     ImageBackground,
     Dimensions,
-    StatusBar
 } from 'react-native';
 import IconText from '../components/IconText';
+import moment from 'moment';
 
-const City = () => {
+const City = ({ cityData }) => {
+    const { 
+        container, 
+        image, 
+        city, 
+        countryStyle, 
+        place, 
+        info, 
+        rowContainer, 
+        rowGroup 
+    } = styles;
 
-    const { container, image, city, country, place, info, rowContainer, rowGroup } = styles;
+    const { name, country, population, sunrise, sunset } = cityData;
 
     return (
         <SafeAreaView styles={container}>
@@ -20,26 +30,26 @@ const City = () => {
                 source={require('../../assets/city.jpg')}
                 style={image}
             >
-                <Text style={[place, city]}>Bragança</Text>
-                <Text style={[place, country]}>Portugal</Text>
+                <Text style={[place, city]}>{name}</Text>
+                <Text style={[place, countryStyle]}>{country}</Text>
                 <IconText
                     icon='user'
                     viewStyle={rowContainer}
                     textStyle={info}
-                    text={'35,341'}
+                    text={`Population: ${population}`}
                 />
                 <View style={rowGroup}>
                     <IconText
                         icon='sunrise'
                         viewStyle={rowContainer}
                         textStyle={info}
-                        text={'05:52am'}
+                        text={moment(sunrise).format('h:mm:ss a')}
                     />
                     <IconText
                         icon='sunset'
                         viewStyle={rowContainer}
                         textStyle={info}
-                        text={'21:04pm'}
+                        text={moment(sunset).format('h:mm:ss a')}
                     />
                 </View>
             </ImageBackground>
@@ -52,11 +62,10 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     image: {
-        flex: 1,
         opacity: .9,
         width: Dimensions.get('screen').width,
         height: Dimensions.get('screen').height,
-        marginTop: StatusBar.currentHeight || 0
+        // marginTop: StatusBar.currentHeight || 0
     },
     place: {
         justifyContent: 'center',
@@ -68,7 +77,7 @@ const styles = StyleSheet.create({
     city: {
         fontSize: 40,
     },
-    country: {
+    countryStyle: {
         fontSize: 30,
     },
     rowContainer: {
